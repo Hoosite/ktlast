@@ -37,7 +37,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Задачи'),
+        title: Text('Задачи', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        shadowColor: Color.fromARGB(255, 75, 88, 132),
+        backgroundColor: Color.fromARGB(255, 186, 195, 242),
+        
       ),
       body: FutureBuilder<void>(
         future: _connectFuture,
@@ -97,6 +101,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           }
         },
       ),
+      backgroundColor: Color.fromARGB(255, 133, 105, 245),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(

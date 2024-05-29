@@ -34,22 +34,31 @@ class DatabaseService {
   }
   bool get isConnected => _isConnected;
 
-  // ///    if (!_isConnected) {
-  //     throw StateError('Database is not connected');
-  //   }
 
    Future<List<Task>> getTasks() async {
+          if (!_isConnected) {
+      throw StateError('Database is not connected');
+    }
+
     final tasks = await _tasksCollection.find().toList();
     return tasks.map((task) => Task.fromJson(task)).toList();
   }
 
   Future<void> insertTask(Task task) async {
+          if (!_isConnected) {
+      throw StateError('Database is not connected');
+    }
+
     task.id = ObjectId().toHexString();
     await _tasksCollection.insert(task.toJson());
     _updateTaskStream();
   }
 
   Future<void> updateTask(Task task) async {
+          if (!_isConnected) {
+      throw StateError('Database is not connected');
+    }
+
     await _tasksCollection.update(
       where.id(ObjectId.fromHexString(task.id)),
       task.toJson(),
@@ -58,11 +67,19 @@ class DatabaseService {
   }
 
   Future<void> deleteTask(String taskId) async {
+          if (!_isConnected) {
+      throw StateError('Database is not connected');
+    }
+
     await _tasksCollection.remove(where.id(ObjectId.fromHexString(taskId)));
     _updateTaskStream();
   }
 
   void _updateTaskStream() async {
+          if (!_isConnected) {
+      throw StateError('Database is not connected');
+    }
+
     final tasks = await _tasksCollection.find().toList();
     _tasksController.add(tasks.map((task) => Task.fromJson(task)).toList());
   }

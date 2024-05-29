@@ -32,7 +32,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.task == null ? 'Новая задача' : 'Редактировать задачу'),
+        title: Text(widget.task == null ? 'Новая задача' : 'Редактировать задачу', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
