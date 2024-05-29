@@ -24,12 +24,46 @@ class DatabaseService {
     await _db.open();
     _tasksCollection = _db.collection(TASKS_COLLECTION);
     _isConnected = true;
-    print('Connected to MongoDB');
+    print('Connected MongoDB');
   }
 
-  Future<void> disconect() async {
+  Future<void> disconnect() async {
     await _db.close();
     _isConnected = false;
-    print('Disconect to MongoDB');
+    print('Disconect MongoDB');
   }
-  
+  bool get isConnected => _isConnected;
+
+  // ///    if (!_isConnected) {
+  //     throw StateError('Database is not connected');
+  //   }
+
+   Future<List<Task>> getTasks() async {
+    final tasks = await _tasksCollection.find().toList();
+    return tasks.map((task) => Task.fromJson(task)).toList();
+  }
+
+  Future<void> insertTask(Task task) async {
+    task.id = ObjectId().toHexString();
+    await _tasksCollection.insert(task.toJson());
+    _updateTaskStream();
+  }
+
+  Future<void> updateTask(Task task) async {
+    await _tasksCollection.update(
+      where.id(ObjectId.fromHexString(task.id)),
+      task.toJson(),
+    );
+    _updateTaskStream();
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    await _tasksCollection.remove(where.id(ObjectId.fromHexString(taskId)));
+    _updateTaskStream();
+  }
+
+  void _updateTaskStream() async {
+    final tasks = await _tasksCollection.find().toList();
+    _tasksController.add(tasks.map((task) => Task.fromJson(task)).toList());
+  }
+}

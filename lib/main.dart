@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'services/database.dart';
+import 'models/task.dart';
+import 'screens/task_list_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        Provider<DatabaseService>(
+          create: (_) => DatabaseService(),
+          dispose: (_, dbService) => dbService.disconnect(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'TODO',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: TaskListScreen(),
+      ),
     );
   }
 }
-
